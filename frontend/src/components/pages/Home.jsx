@@ -27,9 +27,9 @@ const Home = () => {
 
       <div className="">
         {/* Navbar should be in front */}
-        <div className="z-10">
+        {/* <div className="z-10">
           <Navbar />
-        </div>
+        </div> */}
 
         {/* Background image */}
         <img
@@ -54,7 +54,7 @@ const Home = () => {
 
 
       <HomePageModels/>
-      <Footer/>
+      {/* <Footer/> */}
     </>
 
 

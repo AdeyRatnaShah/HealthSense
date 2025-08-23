@@ -44,7 +44,7 @@ const Personalize = () => {
 
       {/* 🔹 Sidebar */}
      <div
-  className={`bg-gray- w-64 min-h-screen text-white
+  className={`bg-gray- w-personalize-width min-h-screen text-white
     fixed  md:absolute  transform
     ${isSideBarOpen ? "translate-x-0" : "-translate-x-full"}
     transition-transform duration-300 

@@ -6,6 +6,7 @@ import Footer from '../layouts/Footer'
 
 import Personalize from '../layouts/Personalize'
 import Navbar from '../layouts/Navbar'
+import ScrollToTop from '../layouts/ScrollTop'
 
 
 const Layout = () => {
@@ -13,6 +14,7 @@ const Layout = () => {
 
   return (
     <div className='min-h-screen flex flex-col'>
+      <ScrollToTop/>
       <Navbar />
       <main className='flex-grow'>
         <div className='flex'>

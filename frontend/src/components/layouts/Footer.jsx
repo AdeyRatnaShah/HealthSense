@@ -5,7 +5,7 @@ import { SiLeetcode } from "react-icons/si";
 import { CiMail } from "react-icons/ci";
 export default function Footer() {
   return (
-    <footer className="bg-gray-300 text-gray-800 py-8 "> 
+    <footer className="bg-navbar-bg w-full  text-white py-8 "> 
       <div className="max-w-6xl mx-auto px-4 flex justify-around gap-20">
 
         <div>
@@ -19,8 +19,9 @@ export default function Footer() {
           <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
           <ul className="space-y-2">
             <li><Link to="/" className="hover:text-emerald-600">Home</Link></li>
-            <li><Link to="/ckd" className="hover:text-emerald-600">Choronic Kidney Disease</Link></li>
-            <li><Link to="/diabetes" className="hover:text-emerald-600">Diabetes</Link></li>
+            <li><Link to="/services" className="hover:text-emerald-600">Services</Link></li>
+            <li><Link to="/about" className="hover:text-emerald-600">About</Link></li>
+            <li><Link to="/contact" className="hover:text-emerald-600">Contact</Link></li>
           </ul>
         </div>
 

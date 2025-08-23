@@ -8,17 +8,23 @@ const HomePageModels = () => {
             title: 'Chronic Kidney Disease Predictor',
             desc: 'Chronic Kidney Disease (CKD) is a long-term condition where the kidneys gradually lose their ability to filter waste and excess fluids from the blood.',
             accuracy: '97.2 %',
+            modelName: 'ckd',
         },
         {
             title: 'Diabetes Predictor',
             desc: 'Diabetes is a long-term condition where the body either doesn’t produce enough insulin or can’t effectively use the insulin it makes, leading to high blood sugar levels',
             accuracy: '94.7 %',
+            modelName: 'diab',
         }
     ]
     const navigate = useNavigate();
-    const handleOnClick = ()=>{
-        navigate('/about')
-    }
+    const handleOnClick = (model) => {
+        if (model === 'ckd') {
+            navigate('/predict/ckd');
+        } else if (model === 'diab') {
+            navigate('/predict/diabetes');
+        }
+    };
     return (
         <div className=''>
             <div className='my-20 mx-40  bg-dark-bg '>
@@ -30,14 +36,14 @@ const HomePageModels = () => {
                             <div className='flex' key={key}>
 
 
-                                <div  className='text-white font-mono mx-30 mb-20 '>
+                                <div className='text-white font-mono mx-30 mb-20 '>
                                     <p className='uppercase text-2xl flex gap-4 items-center '><FaCircleChevronRight className='text-primary' />{model.title}</p>
                                     <p className='text-sm m-5'>{model.desc}</p>
                                     <p className='text-sm m-5'><span>Accuracy: </span><span className='text-primary'>
                                         {model.accuracy}   </span></p>
 
                                     <div className='flex justify-end'>
-                                        <button className='w-20 rounded bg-image-bg text-black ' onClick={handleOnClick}>
+                                        <button className='w-20 rounded bg-image-bg text-black cursor-pointer ' onClick={() => handleOnClick(model.modelName)}>
                                             Check health
                                         </button>
 
