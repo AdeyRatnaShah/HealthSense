@@ -15,7 +15,7 @@ const processModel = async (req, res) => {
       { userId, ...data },       // overwrite with latest vitals
       { new: true, upsert: true } // create if not exists
     );
-    console.log(vitals);
+    // console.log(vitals);
     
     const response = await axios.post("http://localhost:8000/predict", {
       model_name: model,

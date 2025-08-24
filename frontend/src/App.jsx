@@ -14,6 +14,7 @@ import CKD from './components/predict/CKD'
 import Diabetes from './components/predict/Diabetes'
 import SignUp from './components/pages/SignUp'
 import Profile from './components/pages/Profile';
+import Loader from './components/layouts/Loader';
 // import ScrollToTop from './components/layouts/ScrollTop';
 
 export const LoggedInContext = createContext();
@@ -28,14 +29,42 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        { index: true, element:isLoggedIn ? <Home /> : <Login/> },
-        { path: "about", element:isLoggedIn ? <About />:<Login/> },
-        { path: "contact", element: isLoggedIn ? <Contact /> :<Login/>},
-        { path: "login", element: <Login /> },
-        { path: "signup", element: <SignUp /> },
-        { path: "services", element: isLoggedIn ? <Services />:<Login/> },
-        { path: "predict/ckd", element:isLoggedIn ? <CKD />:<Login/>  },
-        { path: "predict/diabetes", element:isLoggedIn ? <Diabetes />:<Login/>  },
+        { 
+          index: true, 
+          element:isLoggedIn ? <Home /> : <Login/> 
+        },
+        { 
+          path: "about", 
+          element:isLoggedIn ? <About />:<Login/> 
+        },
+        { 
+          path: "contact", 
+          element: isLoggedIn ? <Contact /> :<Login/>
+        },
+        { 
+          path: "login", 
+          element: <Login /> 
+        },
+        { 
+          path: "signup", 
+          element: <SignUp /> 
+        },
+        { 
+          path: "loader", 
+          element: <Loader /> 
+        },
+        { 
+          path: "services", 
+          element: isLoggedIn ? <Services />:<Login/> 
+        },
+        { 
+          path: "predict/ckd", 
+          element:isLoggedIn ? <CKD />:<Login/>  
+        },
+        { 
+          path: "predict/diabetes", 
+          element:isLoggedIn ? <Diabetes />:<Login/> 
+         },
         {
           path : 'profile',
           element : <Profile/>,

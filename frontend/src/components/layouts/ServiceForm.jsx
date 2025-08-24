@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 import Loader from "./Loader";
@@ -12,8 +12,42 @@ const ServiceForm = ({ model, fieldLabels, ckdMapValues,ckdNormalValues }) => {
   const [formData, setFormData] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState("");
+
   const [showForm, setShowForm] = useState(true);
   // const showForm = false;
+
+
+  const fetchUserVitals = async () => {
+    try {
+      const token = localStorage.getItem("HealthSense_token");
+      const response = await axios.get(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/auth/profile`, // your endpoint that returns { user, userVitals }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.userVitals) {
+        const vitals = response.data.userVitals;
+
+        // Prefill only keys that exist in fieldLabels
+        const prefill = Object.keys(fieldLabels).reduce((acc, key) => {
+          acc[key] = vitals[key] ?? ""; // fallback empty if missing
+          return acc;
+        }, {});
+
+        setFormData(prefill);
+      }
+    } catch (err) {
+      console.error("Error fetching user vitals:", err);
+    }
+  };
+  useEffect(() => {
+
+    fetchUserVitals();
+  }, [fieldLabels]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,49 +64,41 @@ const ServiceForm = ({ model, fieldLabels, ckdMapValues,ckdNormalValues }) => {
     // heart: heartMapValues,
     // diabetes: diabetesMapValues,
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    console.log('started...');
+  try {
+    const token = localStorage.getItem("HealthSense_token");
+    const mapFn = mapFunctions[model] || ((k, v) => v);
 
-    try {
-      const token = localStorage.getItem("HealthSense_token");
+    const formattedData = Object.keys(formData).reduce((acc, key) => {
+      acc[key] = mapFn(key, formData[key]);
+      return acc;
+    }, {});
 
-      // Convert formData into the expected "data" object
-      const mapFn = mapFunctions[model];
+    const requestBody = {
+      model_name: model,
+      data: formattedData,
+    };
 
-      const formattedData = Object.keys(formData).reduce((acc, key) => {
-        acc[key] = mapFn ? mapFn(key, formData[key]) : formData[key];
-        return acc;
-      }, {});
+    const response = await axios.post(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/getPrediction/${model}`,
+      requestBody,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      const requestBody = {
-        model_name: model,
-        data: formattedData,
-      };
+    setPrediction(response.data.prediction);
+    setShowForm(false);
+    console.log("Prediction:", response.data.prediction);
 
-      console.log(requestBody)
-      const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/getPrediction/${model}`,
-        requestBody,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setIsLoading(false);
-      setPrediction(response.data.prediction);
-      setShowForm(false)
-      console.log('finished...');
-      console.log(prediction);
-    } catch (error) {
-      console.error("Error while getting prediction:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error("Error while getting prediction:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div>
@@ -81,7 +107,7 @@ const ServiceForm = ({ model, fieldLabels, ckdMapValues,ckdNormalValues }) => {
       ) : showForm ? (
         <>
           <div className='bg-gray-200 p-8 m-8 '>
-            <p className='text-3xl font-semibold ml-16 uppercase font-mono'>Fill and Verify Details</p>
+            <p className='text-3xl font-semibold ml-16 uppercase  text-center md:text-left font-mono'>Fill and Verify Details</p>
           </div>
 
 
@@ -137,8 +163,12 @@ const ServiceForm = ({ model, fieldLabels, ckdMapValues,ckdNormalValues }) => {
             <button className="p-2 mr-10 rounded bg-gray-200 hover:bg-gray-800 hover:text-white" 
             onClick={()=> {
               setShowForm(true);
-              setFormData(initialState);
+              // setFormData(initialState);
+              fetchUserVitals()
+       
+
             }}
+
             >
               {/* <IoMdClose /> */}
               Get Another Prediction

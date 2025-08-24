@@ -90,13 +90,18 @@ const signup = async (req, res) => {
 
 const getProfile = async (req, res) => {
     try {
+        // console.log("Profile call made")
         const user = await User.findById(req.user.id).select("-password");
-        const userVitals = await UserVitals.findOne({ userId: user._id });
+        const userVitals = await UserVitals.findOne({ userId: user._id }).select("-userId").select("-_id").select("-createdAt").select("-updatedAt").select("-__v");
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
         res.json({
-            user,
+            user: {
+                name: user.name,
+                email: user.email,
+                createdAt: user.createdAt,
+            },
             userVitals,
         });
     } catch (error) {
