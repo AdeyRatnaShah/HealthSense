@@ -16,8 +16,9 @@ const processModel = async (req, res) => {
       { new: true, upsert: true } // create if not exists
     );
     // console.log(vitals);
-    
-    const response = await axios.post("http://localhost:8000/predict", {
+
+
+    const response = await axios.post("https://healthsense-ml-backend.onrender.com/predict", {
       model_name: model,
       data,
     });
@@ -54,11 +55,13 @@ const processModel = async (req, res) => {
     });
 
   } catch (error) {
+
     console.error("Error in processModel:", error.message);
 
     if (error.response) {
       res.status(error.response.status).json(error.response.data);
     } else {
+      // console.log("here");
       res.status(500).json({ error: "Internal server error" });
     }
   }

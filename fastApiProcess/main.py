@@ -32,6 +32,12 @@ MODEL_PATHS = {
     "diabetes": "models/diabetes_model.joblib"
 }
 
+
+@app.get("/")
+def root():
+    return {"message": "FastAPI backend is running"}
+
+
 # ===================== Endpoint =====================
 
 @app.post("/predict")
