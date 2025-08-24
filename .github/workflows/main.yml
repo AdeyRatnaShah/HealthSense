@@ -1,4 +1,4 @@
-name: Docker Auto-Build & Push with Mapping
+name: Docker Auto-Build & Push
 
 on:
   push:
@@ -12,29 +12,40 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
+      # 1️⃣ Checkout the repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Setup Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      # 3️⃣ Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Determine changed folders
+      # 4️⃣ Detect changed folders safely
+      - name: Detect changed folders
         id: changes
         run: |
           echo "Detecting changed folders..."
-          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F/ '{print $1}' | sort -u)
+          if [ -z "${{ github.event.before }}" ] || [ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]; then
+            # First commit or new branch → consider all top-level folders
+            CHANGED_FOLDERS=$(ls -d */ | sed 's#/##')
+          else
+            CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F/ '{print $1}' | sort -u)
+          fi
+          # Only keep folders that we have Docker images for
+          CHANGED_FOLDERS=$(echo $CHANGED_FOLDERS | tr ' ' '\n' | grep -E '^(frontend|backend|ml_backend)$' || true)
           echo "Changed folders: $CHANGED_FOLDERS"
           echo "CHANGED_FOLDERS=$CHANGED_FOLDERS" >> $GITHUB_ENV
 
-      - name: Build & push Docker images based on mapping
+      # 5️⃣ Build and push Docker images for changed folders
+      - name: Build & Push Docker Images
         run: |
-          # Define folder → Docker repo mapping
           declare -A FOLDER_MAP
           FOLDER_MAP[frontend]="healthsense_frontend"
           FOLDER_MAP[backend]="healthsense_node_backend"
@@ -42,16 +53,15 @@ jobs:
 
           for folder in $CHANGED_FOLDERS; do
             if [ -f "$folder/Dockerfile" ]; then
-              # Determine the Docker repo name from the mapping
               IMAGE_NAME=${FOLDER_MAP[$folder]}
               if [ -z "$IMAGE_NAME" ]; then
                 echo "⚠️ No mapping found for folder '$folder', skipping..."
                 continue
               fi
-
               FULL_IMAGE="arshah22/$IMAGE_NAME:latest"
-              echo "✅ Building and pushing Docker image: $FULL_IMAGE"
+              echo "✅ Building Docker image for $folder → $FULL_IMAGE"
               docker build -t $FULL_IMAGE $folder
+              echo "🚀 Pushing $FULL_IMAGE to Docker Hub..."
               docker push $FULL_IMAGE
             else
               echo "⏭ No Dockerfile in $folder, skipping..."
