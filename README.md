@@ -52,8 +52,6 @@ VITE_APP_NAME=HealthSense
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-EMAIL_USER=your_email
-EMAIL_PASS=your_email_password
 ```
 
 ---
@@ -103,4 +101,5 @@ Project Root
 
 **Adey Ratna Shah**
 [GitHub](https://github.com/AdeyRatnaShah) | [LinkedIn](https://www.linkedin.com/in/adey-ratna-shah/) | [LeetCode](https://leetcode.com/u/arshah3f/)
+
 
