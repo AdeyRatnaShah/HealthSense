@@ -3,10 +3,11 @@ import ModelHero from '../layouts/ModelHero';
 import ServiceForm from '../layouts/ServiceForm'
 
 const Diabetes = () => {
+  const userInfo = localStorage.getItem('HealthSense_user_name');
+  const disease = 'Diabetes';
   const info = {
-    name: 'Adey Ratna Shah',
-    disease: 'Chronic Kidney Disease',
-    image: '' || '',
+    name: userInfo,
+    disease,
   }
 
   const fieldLabels = {

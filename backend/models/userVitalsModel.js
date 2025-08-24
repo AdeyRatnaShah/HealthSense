@@ -11,7 +11,7 @@ const userVitalsSchema = new Schema({
 
   // General Vitals
   age: { type: Number, required: true },
-  bp: { type: Number},
+  bp: { type: Number },
   sg: { type: Number },
   al: { type: Number },
   su: { type: Number },
@@ -33,7 +33,6 @@ const userVitalsSchema = new Schema({
   wbcc: { type: Number },
   rbcc: { type: Number },
 
-  // Comorbidities
   htn: { type: String, enum: ["yes", "no"] },
   dm: { type: String, enum: ["yes", "no"] },
   cad: { type: String, enum: ["yes", "no"] },
@@ -41,7 +40,6 @@ const userVitalsSchema = new Schema({
   pe: { type: String, enum: ["yes", "no"] },
   ane: { type: String, enum: ["yes", "no"] },
 
-  // Additional diabetes dataset features
   pregnancies: { type: Number },
   glucose: { type: Number },
   bloodPressure: { type: Number },

@@ -34,16 +34,7 @@ const userSchema = new Schema({
       "Not yet tried the service"
     ],
     default: "Not yet tried the service"
-  }
-
-  // profilePicture: {
-  //   type: String,
-  //   required: true
-  // },
-  // userVitals: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "UserVitals"
-  // }
+  },
 }, {
   timestamps: true
 });

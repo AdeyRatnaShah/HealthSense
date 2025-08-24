@@ -3,8 +3,8 @@ import { NavLink } from 'react-router-dom'
 import { CgProfile } from "react-icons/cg";
 import { LoggedInContext } from '../../App';
 const Navbar = () => {
-    // const {isLoggedIn, setIsLoggedIn} = useContext(LoggedInContext)
-    const isLoggedIn = true;
+    const { isLoggedIn, setIsLoggedIn } = useContext(LoggedInContext)
+    // const isLoggedIn = true;
 
     return (
         <div className='relative flex justify-between items-center '>
@@ -19,7 +19,7 @@ const Navbar = () => {
                 >
                     <div>
 
-                    <img src="logo.png" alt="" className='items-center mt-1' />
+                        <img src="logo.png" alt="" className='items-center mt-1' />
                     </div>
                     <span>HealthSense</span>
                 </NavLink>
@@ -52,8 +52,8 @@ const Navbar = () => {
                     <span>About</span>
                 </NavLink>
 
-                <NavLink to="/contact" 
-                 className={({ isActive }) =>
+                <NavLink to="/contact"
+                    className={({ isActive }) =>
                         `py-3 px-4 rounded flex items-center space-x-2 capitalize cursor-pointer border-b-4
      transition-all duration-300 ease-in-out
      ${isActive
@@ -68,23 +68,24 @@ const Navbar = () => {
 
             </div>
 
-
-            <div className='flex items-center gap-2 justify-center'>
-                <NavLink to={isLoggedIn ? '/profile' : '/login'}
-                    end 
-                    className={({ isActive }) =>
-                        `py-3 px-4 rounded flex gap items-center space-x-2 capitalize cursor-pointer border-b-4
-     transition-all duration-300 ease-in-out
-     ${isActive
-                            ? "text-emerald-600 border-emerald-500"
-                            : "border-transparent hover:text-emerald-600 hover:border-emerald-500"}`
-                    }
+            {isLoggedIn &&
+                <div className='flex items-center gap-2 justify-center'>
+                    <NavLink to='/profile'
+                        end
+                        className={({ isActive }) =>
+                            `py-3 px-4 rounded flex gap items-center space-x-2 capitalize cursor-pointer border-b-4
+                    transition-all duration-300 ease-in-out
+                    ${isActive
+                                ? "text-emerald-600 border-emerald-500"
+                                : "border-transparent hover:text-emerald-600 hover:border-emerald-500"}`
+                        }
                     >
-                    <CgProfile className='mt-0.5 h-4 w-4' />
-                    
-                    <span>{isLoggedIn ? 'Visit Profile':'Login' }</span>
-                </NavLink>
-            </div>
+                        <CgProfile className='mt-0.5 h-4 w-4' />
+
+                        <span> Visit Profile </span>
+                    </NavLink>
+                </div>
+            }
 
         </div>
     )

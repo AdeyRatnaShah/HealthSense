@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel.js';
+import UserVitals from '../models/userVitalsModel.js';
 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -57,7 +58,7 @@ const signup = async (req, res) => {
         const user = new User({
             name,
             email,
-            password 
+            password
         });
 
         await user.save();
@@ -76,6 +77,7 @@ const signup = async (req, res) => {
                     name: user.name,
                     email: user.email,
                 },
+
                 token
             });
         });
@@ -86,7 +88,25 @@ const signup = async (req, res) => {
     }
 }
 
-export  {
+const getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        const userVitals = await UserVitals.findOne({ userId: user._id });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json({
+            user,
+            userVitals,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Server Error");
+    }
+};
+
+export {
     login,
-    signup
+    signup,
+    getProfile
 };

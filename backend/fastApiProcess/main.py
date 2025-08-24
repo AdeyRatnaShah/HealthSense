@@ -38,8 +38,8 @@ MODEL_PATHS = {
 async def predict(request: PredictionRequest):
     body = request.dict()
     model_name = body["model_name"].lower()
-    data = body["data"]["data"]
-    # print(model_name, data)
+    data = body["data"]
+    print(model_name, data)
 
 
     # Validate model name

@@ -18,7 +18,7 @@ const Login = () => {
     } else {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/users/login`,
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/auth/login`,
           { email, password }
         );
 
@@ -28,6 +28,7 @@ const Login = () => {
           `${import.meta.env.VITE_APP_NAME}_user_name`,
           response.data.user.name
         );
+        console.log("Login Successful")
 
         setIsLoggedIn(true);
         navigate('/');
